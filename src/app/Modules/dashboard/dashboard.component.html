@@ -1,0 +1,53 @@
+<div fxLayout="column">
+
+    <div fxLayout="row" fxLayout.xs="column">
+        <div fxFlex="100">
+          <mat-toolbar color="primary">
+            <span>Doctor Database</span>
+            <span class="spacer"></span>
+            <span><a routerLink="/">Home</a></span>
+            &nbsp;&nbsp;
+            <div *ngIf="!isLoggedIn"><span><a routerLink="/auth/login">Login</a></span></div>
+            <div *ngIf="isLoggedIn"><span><a routerLink="/dashboard">Dashboard</a></span></div>
+          </mat-toolbar>
+        </div>
+    </div>
+  
+    <div fxLayout="row" fxLayout.xs="column">
+      <div fxFlex="100">
+        <mat-drawer-container class="sidenav-container" autosize>
+
+          <mat-drawer #drawer class="sidenav" mode="side" opened="true">
+            <p style="padding-left: 15px;">Menu</p>
+            <hr>
+            <p><button mat-flat-button class="sidenav-button" (click)="logout()">Logout</button></p>
+          </mat-drawer>
+        
+          <div class="sidenav-content">
+            <div fxLayout="column">
+              <div fxLayout="row" fxLayout.xs="column">
+                <div fxFlex="100">
+                  <p style="font-size: larger;">
+                    <button type="button" mat-button (click)="drawer.toggle()"><mat-icon>menu</mat-icon></button>
+                    {{module_title}}
+                  </p>
+                </div>
+              </div>
+              <div fxLayout="row" fxLayout.xs="column">
+                <div fxFlex="100">
+                  <router-outlet></router-outlet>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-drawer-container>
+      </div>
+    </div>
+  
+    <div fxLayout="row" fxLayout.xs="column" class="footer">
+      <div fxFlex="100">
+        <span>Version: Dashboard 1.0</span>
+      </div>
+    </div>
+  
+  </div>
