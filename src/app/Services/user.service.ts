@@ -20,19 +20,10 @@ export class UserService {
 
   login(userModel: UserLoginModel): Observable<[boolean, any]> {
     return new Observable<[boolean, any]>((observer) => {
-      let body = "username=" + userModel.username + "&password=" + userModel.password;
-      let encoded_options = { headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }) };
-      this.http.post(this.api_url + '/login', body, encoded_options).subscribe(
-        response => {
-          localStorage.setItem('username', userModel.username);
-          localStorage.setItem('token', response["token"]);
-          observer.next([true, "Success"]);
-          observer.complete();
-        },
-        error => {
-          observer.next([false, error]);
-          observer.complete();
-        });
+      localStorage.setItem('username', userModel.username);
+      localStorage.setItem('token', 'Local Token Example');
+      observer.next([true, "Success"]);
+      observer.complete();
     });
   }
   logout(): void {
