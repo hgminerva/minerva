@@ -24,11 +24,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MainComponent } from './main/main.component';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    MainComponent
+    MainComponent,
+    TestComponent
   ],
   imports: [
     CommonModule,

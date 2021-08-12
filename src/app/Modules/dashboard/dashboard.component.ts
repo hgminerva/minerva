@@ -20,8 +20,13 @@ export class DashboardComponent implements OnInit {
   { }
   
   menu(param: string) : void {
-    this.module_title = "Dashboard";
-    this.router.navigate(['/dashboard/main']);
+    if(param == "test") {
+      this.module_title = "Test";
+      this.router.navigate(['/dashboard/test']);
+    } else {
+      this.module_title = "Dashboard";
+      this.router.navigate(['/dashboard/main']);
+    }
   }
 
   logout(): void {
