@@ -1,1 +1,60 @@
-<p>test works!</p>
+<div fxLayout="column">
+    
+    <div fxLayout="row" fxLayout.xs="column" >
+        <div fxFlex="100" [hidden]="!stillProcessing" >
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayout.xs="column" >
+        <!-- Url List -->
+        <div fxFlex="50">
+            <div fxLayout="column">
+                <div fxLayout="row" fxLayout.xs="column" style="padding-bottom: 10px;">
+                    <div fxFlex="70">
+                        <span style="color: goldenrod;">URL End Points</span>
+                    </div>
+                    <div fxFlex="10" style="padding-right: 5px;">
+                        <button mat-flat-button color="primary" (click)="buttonAdd()" style="width:100%">Add</button>
+                    </div>
+                    <div fxFlex="10" style="padding-right: 5px;">
+                        <button mat-flat-button color="primary" (click)="buttonImport()" style="width:100%">Import</button>
+                    </div>
+                    <div fxFlex="10" style="padding-right: 5px;">
+                        <button mat-flat-button color="primary" (click)="buttonExport()" style="width:100%">Export</button>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" >
+                    <div fxFlex="100">
+                        <mat-table [dataSource]="urlDataSource">
+                            <!-- Type -->
+                            <ng-container matColumnDef="type" >
+                                <mat-header-cell *matHeaderCellDef>Type </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.type}} </mat-cell>
+                            </ng-container>
+                            <!-- Url -->
+                            <ng-container matColumnDef="url">
+                                <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> <a style="color: blue;" [routerLink]="" (click)="editRow(row)">{{row.url}}</a> </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="urlDataColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: urlDataColumns;"></mat-row>
+                        </mat-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Status Display -->
+        <div fxFlex="50">
+            <div fxLayout="column">
+                <div fxLayout="row" fxLayout.xs="column" style="padding-bottom: 10px;">
+                    <div fxFlex="100">
+                        <span style="color: goldenrod;">Status</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

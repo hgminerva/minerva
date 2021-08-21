@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>
+    URL Detail
+</h1>
+
+<mat-dialog-content>
+    <div fxLayout="column">
+        <!-- Type -->
+        <div fxLayout="row" fxLayout.xs="column">
+            <div fxFlex="100">
+                <mat-form-field class="full-width" appearance="fill" >
+                    <mat-label>Type</mat-label>
+                    <mat-select [(ngModel)]="urlModel.type">
+                        <mat-option *ngFor="let type of types" [value]="type">
+                          {{type}}
+                        </mat-option>
+                      </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <!-- URL -->
+        <div fxLayout="row" fxLayout.xs="column">
+            <div fxFlex="100">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>URL</mat-label>
+                    <textarea matInput placeholder="URL" [(ngModel)]="urlModel.url" rows="4"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+
+<mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" (click)="buttonSave()">
+        Save
+    </button>
+    <button mat-flat-button color="primary" (click)="buttonCancel()">
+        Cancel
+    </button>
+</mat-dialog-actions>
+

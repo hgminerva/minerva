@@ -25,12 +25,16 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MainComponent } from './main/main.component';
 import { TestComponent } from './test/test.component';
+import { ProjectComponent } from './project/project.component';
+import { UrlDetailComponent } from './test/url-detail/url-detail.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     MainComponent,
-    TestComponent
+    TestComponent,
+    ProjectComponent,
+    UrlDetailComponent
   ],
   imports: [
     CommonModule,

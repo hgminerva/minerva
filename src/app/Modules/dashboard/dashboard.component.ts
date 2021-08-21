@@ -23,6 +23,9 @@ export class DashboardComponent implements OnInit {
     if(param == "test") {
       this.module_title = "Test";
       this.router.navigate(['/dashboard/test']);
+    } else     if(param == "project") {
+      this.module_title = "Project";
+      this.router.navigate(['/dashboard/project']);
     } else {
       this.module_title = "Dashboard";
       this.router.navigate(['/dashboard/main']);
