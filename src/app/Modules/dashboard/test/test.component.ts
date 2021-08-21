@@ -12,6 +12,7 @@ import { UrlDetailComponent } from './url-detail/url-detail.component';
 import { UrlQueryModel } from '../../../Models/url-query.model';
 import { UrlHeaderModel } from '../../../Models/url-header.model';
 import { UrlModel } from '../../../Models/url.model';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-test',
@@ -35,8 +36,14 @@ export class TestComponent implements OnInit {
 
   urlModel: UrlModel;
 
+  running: boolean = false;
+  start_running_label: string = "Run Test";
+  timerRef: any;
+  timerCounter: number = 0;
+
   users:number =  5;
-  iterations: number = 1;
+  duration: number = 5;
+  ramp: number = 1;
 
   urls: any = [];
 
@@ -75,14 +82,57 @@ export class TestComponent implements OnInit {
     
   }
   buttonRunTest(): void {
-    this.urls = [];
-    for(let u=0;u<this.users;u++) {
+    this.running = !this.running;
+    if(this.running) {
+      let batch: number = 0;
+      let batch_counter: number = 0;
+      let number_of_users_per_batch: number = 0;
+
+      batch = this.duration / this.ramp;
+      number_of_users_per_batch = this.users / batch;
+      this.urls = [];
+      
+      const startTime = Date.now() - (this.timerCounter || 0);
+      this.timerRef = setInterval(() => {
+        this.timerCounter = Date.now() - startTime;
+        this.start_running_label = "Stop Test - " + this.displayMilliseconds(this.timerCounter);
+        if(batch_counter == 0) {
+          this.insertUrlToTest(number_of_users_per_batch, batch_counter);
+          batch_counter++;
+        } else { 
+          let currentTime: number = Math.floor(this.timerCounter / 60000);
+          let timeCheck: number = batch_counter * this.ramp;
+          if(currentTime == timeCheck) {
+            this.insertUrlToTest(number_of_users_per_batch, batch_counter);
+            batch_counter++;
+          }
+        }
+      });
+    } else {
+      this.start_running_label = "Run Test";
+      this.timerCounter = 0;
+      clearInterval(this.timerRef);
+    }
+  }
+  insertUrlToTest(users: number, batch_counter: number) {
+    for(let u=0;u<users;u++) {
       for(let i=0;i<this.urlData.length;i++) {
-        this.urls.push({user: u+1, url: this.urlData[i].url, status: null,time_in:new Date, total_seconds: 0})
+        this.urls.unshift({
+          batch:batch_counter+1, 
+          user: u+1, 
+          url_counter: i+1, 
+          url: this.urlData[i].url, 
+          status: null,
+          time_in:new Date, 
+          total_seconds: 0
+        })
       }
     }
 
-    for(let i=0;i<this.urls.length;i++) {
+    let start_index = (users * this.urlData.length) - 1;  
+    let end_index = 0; 
+
+    for(let i=start_index;i>=end_index;i--) {
       this.executeTest(this.urls[i].url).subscribe(event => {
         if (event.type === HttpEventType.DownloadProgress) {
           this.urls[i].time_in = new Date();
@@ -91,8 +141,11 @@ export class TestComponent implements OnInit {
         if (event.type === HttpEventType.Response) {
           let endDate = new Date();
           this.urls[i].total_seconds = (endDate.getTime()-this.urls[i].time_in.getTime()) / 1000;
-          this.urls[i].status = "completed";
+          this.urls[i].status = event.status;
         }      
+      }, error => {
+        this.urls[i].total_seconds = 0;
+        this.urls[i].status = "Error";
       })
     }
   }
@@ -121,6 +174,19 @@ export class TestComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUrls();
+  }
+
+  displayMilliseconds(ms: number): string {
+    var d, h, m, s;
+    s = Math.floor(ms / 1000);
+    m = Math.floor(s / 60);
+    s = s % 60;
+    h = Math.floor(m / 60);
+    m = m % 60;
+    d = Math.floor(h / 24);
+    h = h % 24;
+    h += d * 24;
+    return h + ':' + m + ':' + s;
   }
 
 }

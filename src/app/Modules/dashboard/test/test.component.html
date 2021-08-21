@@ -24,7 +24,7 @@
                         <button mat-flat-button color="primary" (click)="buttonExport()" style="width:100%">Export</button>
                     </div>
                 </div>
-                <div fxLayout="row" fxLayout.xs="column" >
+                <div fxLayout="row" fxLayout.xs="column" style="padding-bottom: 10px;">
                     <div fxFlex="100">
                         <mat-table [dataSource]="urlDataSource">
                             <!-- Row No. -->
@@ -47,26 +47,38 @@
                         </mat-table>
                     </div>
                 </div>
+                <div fxLayout="row" fxLayout.xs="column">
+                    <div fxFlex="100">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Total Users</mat-label>
+                            <input type="text" matInput placeholder="Total Number of Users" [(ngModel)]="users" >
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column">
+                    <div fxFlex="100">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Duration (mins)</mat-label>
+                            <input type="text" matInput placeholder="Duration" [(ngModel)]="duration" >
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column">
+                    <div fxFlex="100">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Ramp-up (mins)</mat-label>
+                            <input type="text" matInput placeholder="Ramp-up" [(ngModel)]="ramp" >
+                        </mat-form-field>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Status Display -->
         <div fxFlex="50" style="padding: 10px">
             <div fxLayout="column">
                 <div fxLayout="row" fxLayout.xs="column" style="padding-bottom: 10px;">
-                    <div fxFlex="30">
-                        <mat-form-field appearance="fill" >
-                            <mat-label>Users</mat-label>
-                            <input type="text" matInput placeholder="No. of Users" [(ngModel)]="users" >
-                        </mat-form-field>
-                    </div>
-                    <div fxFlex="30">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Iterations</mat-label>
-                            <input type="text" matInput placeholder="No. of Iterations" [(ngModel)]="iterations" >
-                        </mat-form-field>
-                    </div>
-                    <div fxFlex="40">
-                        <button mat-flat-button color="primary" (click)="buttonRunTest()" style="width:100%">Run Test</button>
+                    <div fxFlex="100">
+                        <button mat-flat-button color="accent" (click)="buttonRunTest()" style="width:100%">{{ start_running_label }}</button>
                     </div>
                 </div>
                 <div fxLayout="row" fxLayout.xs="column" style="padding-bottom: 10px;">
@@ -78,7 +90,10 @@
                             <table>
                                 <thead>
                                     <tr>
+                                      <th>Index</th>
+                                      <th>Batch</th>
                                       <th>User</th>
+                                      <th>URL No.</th>
                                       <th>URL</th>
                                       <th>Status</th>
                                       <th>Time</th>
@@ -86,18 +101,13 @@
                                   </thead>
                                   <tbody>
                                     <tr *ngFor="let url of urls; let i = index">
-                                        <td>
-                                            {{url['user']}}
-                                          </td>
-                                      <td>
-                                        {{url['url']}}
-                                      </td>
-                                      <td>
-                                        {{url['status']}}
-                                      </td>
-                                      <td>
-                                        {{url['total_seconds']}} seconds
-                                      </td>
+                                      <td style="text-align: center;">{{i+1}}</td>
+                                      <td style="text-align: center;">{{url['batch']}}</td>
+                                      <td style="text-align: center;">{{url['user']}}</td>
+                                      <td style="text-align: center;">{{url['url_counter']}}</td>
+                                      <td><span style="font-size: smaller;">{{url['url']}}</span></td>
+                                      <td style="text-align: center;"><span [ngClass]="url['status'] == 200? 'green-font' : 'green-red'"><b>{{url['status']}}</b></span></td>
+                                      <td style="text-align: center;">{{url['total_seconds']}}s</td>
                                     </tr>
                                   </tbody>
                             </table>
