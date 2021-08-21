@@ -8,7 +8,7 @@
 
     <div fxLayout="row" fxLayout.xs="column" >
         <!-- Url List -->
-        <div fxFlex="50">
+        <div fxFlex="50" style="padding: 10px">
             <div fxLayout="column">
                 <div fxLayout="row" fxLayout.xs="column" style="padding-bottom: 10px;">
                     <div fxFlex="70">
@@ -27,6 +27,11 @@
                 <div fxLayout="row" fxLayout.xs="column" >
                     <div fxFlex="100">
                         <mat-table [dataSource]="urlDataSource">
+                            <!-- Row No. -->
+                            <ng-container matColumnDef="id" >
+                                <mat-header-cell *matHeaderCellDef>No. </mat-header-cell>
+                                <mat-cell *matCellDef="let row; let i = index"> {{ i+1 }} </mat-cell>
+                            </ng-container>
                             <!-- Type -->
                             <ng-container matColumnDef="type" >
                                 <mat-header-cell *matHeaderCellDef>Type </mat-header-cell>
@@ -45,16 +50,62 @@
             </div>
         </div>
         <!-- Status Display -->
-        <div fxFlex="50">
+        <div fxFlex="50" style="padding: 10px">
             <div fxLayout="column">
                 <div fxLayout="row" fxLayout.xs="column" style="padding-bottom: 10px;">
-                    <div fxFlex="100">
-                        <span style="color: goldenrod;">Status</span>
+                    <div fxFlex="30">
+                        <mat-form-field appearance="fill" >
+                            <mat-label>Users</mat-label>
+                            <input type="text" matInput placeholder="No. of Users" [(ngModel)]="users" >
+                        </mat-form-field>
                     </div>
+                    <div fxFlex="30">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Iterations</mat-label>
+                            <input type="text" matInput placeholder="No. of Iterations" [(ngModel)]="iterations" >
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="40">
+                        <button mat-flat-button color="primary" (click)="buttonRunTest()" style="width:100%">Run Test</button>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" style="padding-bottom: 10px;">
+                    <mat-card style="width: 100%;">
+                        <mat-card-header>
+                            <mat-card-title>Test Results</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <table>
+                                <thead>
+                                    <tr>
+                                      <th>User</th>
+                                      <th>URL</th>
+                                      <th>Status</th>
+                                      <th>Time</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let url of urls; let i = index">
+                                        <td>
+                                            {{url['user']}}
+                                          </td>
+                                      <td>
+                                        {{url['url']}}
+                                      </td>
+                                      <td>
+                                        {{url['status']}}
+                                      </td>
+                                      <td>
+                                        {{url['total_seconds']}} seconds
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                            </table>
+                        </mat-card-content>
+                    </mat-card>
                 </div>
             </div>
         </div>
-
     </div>
 
 </div>

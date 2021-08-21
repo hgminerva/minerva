@@ -19,6 +19,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
 
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
@@ -57,6 +58,7 @@ import { UrlDetailComponent } from './test/url-detail/url-detail.component';
     MatDividerModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatCardModule,
 
     DashboardRoutingModule
   ]

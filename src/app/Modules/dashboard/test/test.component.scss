@@ -1,4 +1,12 @@
+.mat-column-id {
+    flex: none;
+    width: 70px;
+}
 .mat-column-type {
     flex: none;
     width: 100px;
+}
+.mat-card-content {
+    height: 620px;
+    overflow-y: scroll;
 }
