@@ -34,15 +34,15 @@ export class TestComponent implements OnInit {
       type:'POST', 
       url:'https://gorest.co.in/public/v1/users',
       queries:null,
-      headers: '{"Accept": "application/json", "Content-Type":"application/json", "Authorization": "Bearer ACCESS-TOKEN" }',
+      headers: '{"Accept": "application/json", "Content-Type":"application/json", "Authorization": "Bearer d7344c4dfd99ead02dd46e6cf0ef8e2eafaaa9e472b7fa970b46b85b3c7dd55b" }',
       auth:null,
       body:'{"name":"Richard Gomez", "gender":"male", "email":"richard@gmail.com", "status":"active"}'
     },
     {
       type:'PUT', 
-      url:'https://gorest.co.in/public/v1/users/123',
+      url:'https://gorest.co.in/public/v1/users/1426',
       queries:null,
-      headers: '{"Accept": "application/json", "Content-Type":"application/json", "Authorization": "Bearer ACCESS-TOKEN" }',
+      headers: '{"Accept": "application/json", "Content-Type":"application/json", "Authorization": "Bearer d7344c4dfd99ead02dd46e6cf0ef8e2eafaaa9e472b7fa970b46b85b3c7dd55b" }',
       auth:null,
       body:'{"name":"Richard Gomez", "gender":"male", "email":"richard@gmail.com", "status":"active"}'
     },
@@ -50,7 +50,7 @@ export class TestComponent implements OnInit {
       type:'DELETE', 
       url:'https://gorest.co.in/public/v1/users/123',
       queries:null,
-      headers: '{"Accept": "application/json", "Content-Type":"application/json", "Authorization": "Bearer ACCESS-TOKEN" }',
+      headers: '{"Accept": "application/json", "Content-Type":"application/json", "Authorization": "Bearer d7344c4dfd99ead02dd46e6cf0ef8e2eafaaa9e472b7fa970b46b85b3c7dd55b" }',
       auth:null,
       body:null
     },
@@ -219,7 +219,7 @@ export class TestComponent implements OnInit {
       // Body / Load
       let body = url.url['body']
       if(body != null) {
-        body = JSON.stringify(url.url['body']);
+        body = JSON.stringify(JSON.parse(url.url['body']));
       }
 
       if(url.url['type'] == 'GET') {
