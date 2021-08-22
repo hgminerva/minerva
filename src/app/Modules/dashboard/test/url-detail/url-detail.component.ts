@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ToastrService } from 'ngx-toastr';
@@ -10,7 +10,8 @@ import { UrlModel } from '../../../../Models/url.model';
 @Component({
   selector: 'app-url-detail',
   templateUrl: './url-detail.component.html',
-  styleUrls: ['./url-detail.component.scss']
+  styleUrls: ['./url-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class UrlDetailComponent implements OnInit {
 
@@ -35,6 +36,9 @@ export class UrlDetailComponent implements OnInit {
   }
   buttonCancel(): void {
     this.dialog.close("CANCEL");
+  }
+  buttonDelete(): void {
+    this.dialog.close("DELETE");
   }
 
   ngOnInit(): void {

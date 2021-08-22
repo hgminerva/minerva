@@ -9,10 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { UrlDetailComponent } from './url-detail/url-detail.component';
 
-import { UrlQueryModel } from '../../../Models/url-query.model';
-import { UrlHeaderModel } from '../../../Models/url-header.model';
 import { UrlModel } from '../../../Models/url.model';
-import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-test',
@@ -25,14 +22,45 @@ export class TestComponent implements OnInit {
 
   urlDataSource: MatTableDataSource<UrlModel>;
   urlData: UrlModel[] = [
-    {type:'GET', url:'https://fir-realtime-db-sample-6856c.firebaseio.com/products/-MCfzHI8zxl8m-6p5a6w.json',queries:null,headers:null,auth_type:null,auth_value:null,body:null},
-    {type:'GET', url:'https://fir-realtime-db-sample-6856c.firebaseio.com/categories/-MCfyFwdqEa0ZyXkN6Y0.json',queries:null,headers:null,auth_type:null,auth_value:null,body:null},
+    {
+      type:'GET', 
+      url:'https://gorest.co.in/public/v1/users',
+      queries:null,
+      headers: '{"Accept": "application/json", "Content-Type":"application/json" }',
+      auth:null,
+      body:null
+    },
+    {
+      type:'POST', 
+      url:'https://gorest.co.in/public/v1/users',
+      queries:null,
+      headers: '{"Accept": "application/json", "Content-Type":"application/json", "Authorization": "Bearer ACCESS-TOKEN" }',
+      auth:null,
+      body:'{"name":"Richard Gomez", "gender":"male", "email":"richard@gmail.com", "status":"active"}'
+    },
+    {
+      type:'PUT', 
+      url:'https://gorest.co.in/public/v1/users/123',
+      queries:null,
+      headers: '{"Accept": "application/json", "Content-Type":"application/json", "Authorization": "Bearer ACCESS-TOKEN" }',
+      auth:null,
+      body:'{"name":"Richard Gomez", "gender":"male", "email":"richard@gmail.com", "status":"active"}'
+    },
+    {
+      type:'DELETE', 
+      url:'https://gorest.co.in/public/v1/users/123',
+      queries:null,
+      headers: '{"Accept": "application/json", "Content-Type":"application/json", "Authorization": "Bearer ACCESS-TOKEN" }',
+      auth:null,
+      body:null
+    },
   ];
   urlDataColumns: string[] = [
     'id',
     'type',
     'url'
   ];
+
 
   urlModel: UrlModel;
 
@@ -49,7 +77,8 @@ export class TestComponent implements OnInit {
 
   constructor(
     private urlDialog: MatDialog,
-    private http: HttpClient
+    private http: HttpClient,
+    private toastr: ToastrService,
   ) { }
 
   getUrls(): void {
@@ -58,8 +87,11 @@ export class TestComponent implements OnInit {
 
   buttonAdd(): void {
     this.urlModel = new UrlModel();
+
+    this.urlModel.type = 'GET';
+
     const openDialog = this.urlDialog.open(UrlDetailComponent, {
-      width: '400px',
+      width: '500px',
       data: {
         dataType: "SAVE",
         urlModel: this.urlModel
@@ -90,24 +122,39 @@ export class TestComponent implements OnInit {
 
       batch = this.duration / this.ramp;
       number_of_users_per_batch = this.users / batch;
-      this.urls = [];
-      
-      const startTime = Date.now() - (this.timerCounter || 0);
-      this.timerRef = setInterval(() => {
-        this.timerCounter = Date.now() - startTime;
-        this.start_running_label = "Stop Test - " + this.displayMilliseconds(this.timerCounter);
-        if(batch_counter == 0) {
-          this.insertUrlToTest(number_of_users_per_batch, batch_counter);
-          batch_counter++;
-        } else { 
-          let currentTime: number = Math.floor(this.timerCounter / 60000);
-          let timeCheck: number = batch_counter * this.ramp;
-          if(currentTime == timeCheck) {
+
+      if(this.ramp > 0 && batch > 0 && this.duration % this.ramp == 0 && this.users % batch == 0)  {
+        this.urls = [];
+        const startTime = Date.now() - (this.timerCounter || 0);
+        this.timerRef = setInterval(() => {
+          this.timerCounter = Date.now() - startTime;
+          this.start_running_label = "Stop Test - " + this.displayMilliseconds(this.timerCounter);
+          if(batch_counter == 0) {
             this.insertUrlToTest(number_of_users_per_batch, batch_counter);
             batch_counter++;
+          } else { 
+            let currentTime: number = Math.floor(this.timerCounter / 60000);
+            let timeCheck: number = batch_counter * this.ramp;
+            if(currentTime == timeCheck) {
+              this.insertUrlToTest(number_of_users_per_batch, batch_counter);
+              batch_counter++;
+              if(batch_counter >batch) {
+                this.toastr.success("Test finished")
+                this.start_running_label = "Run Test";
+                this.timerCounter = 0;
+                clearInterval(this.timerRef);
+              }
+            }
           }
-        }
-      });
+        });
+      } else {
+        this.running = !this.running;
+        this.toastr.error("Test is not allowed");
+        this.start_running_label = "Run Test";
+        this.timerCounter = 0;
+        clearInterval(this.timerRef);
+      }
+
     } else {
       this.start_running_label = "Run Test";
       this.timerCounter = 0;
@@ -121,7 +168,7 @@ export class TestComponent implements OnInit {
           batch:batch_counter+1, 
           user: u+1, 
           url_counter: i+1, 
-          url: this.urlData[i].url, 
+          url: this.urlData[i], 
           status: null,
           time_in:new Date, 
           total_seconds: 0
@@ -133,7 +180,7 @@ export class TestComponent implements OnInit {
     let end_index = 0; 
 
     for(let i=start_index;i>=end_index;i--) {
-      this.executeTest(this.urls[i].url).subscribe(event => {
+      this.executeTest(this.urls[i]).subscribe(event => {
         if (event.type === HttpEventType.DownloadProgress) {
           this.urls[i].time_in = new Date();
           this.urls[i].status = "on-going";
@@ -149,14 +196,94 @@ export class TestComponent implements OnInit {
       })
     }
   }
-  executeTest(url: string): Observable<HttpEvent<any>> {
-    return this.http.get( url , { responseType: "json", reportProgress: true, observe: "events", headers: new HttpHeaders() } );
+  executeTest(url: UrlModel): Observable<HttpEvent<any>> {
+    let urlEndPoint: string = "";
+    let response: any;
+
+    try {
+      // Query Parameters
+      let queryParameters = url.url['queries'];
+      if(queryParameters != null) {
+        queryParameters = JSON.parse(url.url['queries']);
+        let param = Object.keys(queryParameters).map(key => key + '=' + queryParameters[key]).join('&');
+        urlEndPoint = url.url['url'] + "?" + param;
+      } else {
+        urlEndPoint = url.url['url'];
+      }
+      // Headers
+      let httpHeaders = new HttpHeaders(); 
+      if(url.url['headers'] != null) {
+        let headers = JSON.parse(url.url['headers']);
+        httpHeaders = new HttpHeaders(headers); 
+      } 
+      // Body / Load
+      let body = url.url['body']
+      if(body != null) {
+        body = JSON.stringify(url.url['body']);
+      }
+
+      if(url.url['type'] == 'GET') {
+        response = this.http.get( urlEndPoint, { 
+                                responseType: "json", 
+                                reportProgress: true, 
+                                observe: "events", 
+                                headers: httpHeaders
+                              });
+      } else  if(url.url['type'] == 'POST') {
+        response = this.http.post( urlEndPoint, body, { 
+                                responseType: "json", 
+                                reportProgress: true, 
+                                observe: "events", 
+                                headers: httpHeaders 
+                              });
+      } else  if(url.url['type'] == 'PUT') {
+        response = this.http.put( urlEndPoint, body, { 
+                                responseType: "json", 
+                                reportProgress: true, 
+                                observe: "events", 
+                                headers: httpHeaders
+                              });
+      } else  if(url.url['type'] == 'DELETE') {
+        response = this.http.delete( urlEndPoint, { 
+                                responseType: "json", 
+                                reportProgress: true, 
+                                observe: "events", 
+                                headers: httpHeaders
+                              });
+      } else {
+        response = null;
+      }
+    } catch(e) {
+      this.toastr.error("Error performing test.  Test cancelled.")
+      this.start_running_label = "Run Test";
+      this.timerCounter = 0;
+      clearInterval(this.timerRef);
+
+      return null;
+    }
+    return response;
+  }
+  testDurationStatement(): string {
+    let batch: number = 0;
+    let number_of_users_per_batch: number = 0;
+    let statement: string = "";
+
+    batch = this.duration / this.ramp;
+    number_of_users_per_batch = this.users / batch;
+
+    if(this.ramp > 0 && batch > 0 && this.duration % this.ramp == 0 && this.users % batch == 0) {
+      statement = "Note: The system will test " + number_of_users_per_batch + " user(s) every " + this.ramp + " minute(s) for the duration of " + this.duration + " minute(s)."
+    } else {
+      statement = "Note: Test is not allowed."
+    }
+
+    return statement;
   }
 
-  editRow(row: UrlModel): void {
+  editRow(row: UrlModel, index: number): void {
     this.urlModel = row;
     const openDialog = this.urlDialog.open(UrlDetailComponent, {
-      width: '400px',
+      width: '500px',
       data: {
         dataType: "UPDATE",
         urlModel: this.urlModel
@@ -167,7 +294,10 @@ export class TestComponent implements OnInit {
     openDialog.afterClosed().subscribe(result => {
       if (result == "UPDATE") {
         this.getUrls();
-      }  else {
+      }  else if (result == "DELETE") { 
+        this.urlData.splice(index, 1);
+        this.getUrls();
+      }else {
       } 
     });
   }

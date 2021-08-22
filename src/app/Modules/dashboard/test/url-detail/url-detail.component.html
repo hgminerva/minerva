@@ -26,17 +26,51 @@
                 </mat-form-field>
             </div>
         </div>
+        <!-- Query Parameter, Header, and Auth -->
+        <div fxLayout="row" fxLayout.xs="column">
+            <div fxFlex="100">
+                <mat-tab-group>
+                    <mat-tab label="Parameter">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Parameters</mat-label>
+                            <textarea matInput placeholder="{&#10;&#9;filter: '0917',&#10;&#9;page: 1&#10;}" [(ngModel)]="urlModel.queries" rows="8"></textarea>
+                        </mat-form-field>
+                    </mat-tab>
+                    <mat-tab label="Header">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Headers</mat-label>
+                            <textarea matInput placeholder="{&#10;&#9;Accept: text/html,&#10;&#9;Access-Control-Allow-Origin: *&#10;}" [(ngModel)]="urlModel.headers" rows="8"></textarea>
+                        </mat-form-field>
+                    </mat-tab>
+                    <mat-tab label="Auth">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Auth</mat-label>
+                            <textarea matInput placeholder="{&#10;&#9;Authorization: Basic YWxhZGRpbjW1l&#10;}" [(ngModel)]="urlModel.auth" rows="8"></textarea>
+                        </mat-form-field>
+                    </mat-tab>
+                    <mat-tab label="Body">
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Body</mat-label>
+                            <textarea matInput placeholder="" [(ngModel)]="urlModel.body" rows="8"></textarea>
+                        </mat-form-field>
+                    </mat-tab>
+                  </mat-tab-group>
+            </div>
+        </div>
     </div>
 </mat-dialog-content>
 
 <mat-divider></mat-divider>
 
 <mat-dialog-actions align="end">
-    <button mat-flat-button color="primary" (click)="buttonSave()">
+    <button mat-flat-button color="warn" (click)="buttonDelete()" *ngIf="dataType!='SAVE'">
+        Delete
+    </button>
+    <button mat-flat-button color="primary" (click)="buttonSave()" *ngIf="dataType=='SAVE'">
         Save
     </button>
     <button mat-flat-button color="primary" (click)="buttonCancel()">
-        Cancel
+        Close
     </button>
 </mat-dialog-actions>
 

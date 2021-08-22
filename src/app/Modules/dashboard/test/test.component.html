@@ -40,7 +40,7 @@
                             <!-- Url -->
                             <ng-container matColumnDef="url">
                                 <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
-                                <mat-cell *matCellDef="let row"> <a style="color: blue;" [routerLink]="" (click)="editRow(row)">{{row.url}}</a> </mat-cell>
+                                <mat-cell *matCellDef="let row; let i = index"> <a style="color: blue;" [routerLink]="" (click)="editRow(row, i)">{{row.url}}</a> </mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="urlDataColumns"></mat-header-row>
                             <mat-row *matRowDef="let row; columns: urlDataColumns;"></mat-row>
@@ -69,6 +69,11 @@
                             <mat-label>Ramp-up (mins)</mat-label>
                             <input type="text" matInput placeholder="Ramp-up" [(ngModel)]="ramp" >
                         </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column">
+                    <div fxFlex="100">
+                        <h4 style="color:rosybrown">{{ testDurationStatement() }}</h4>
                     </div>
                 </div>
             </div>
@@ -105,7 +110,7 @@
                                       <td style="text-align: center;">{{url['batch']}}</td>
                                       <td style="text-align: center;">{{url['user']}}</td>
                                       <td style="text-align: center;">{{url['url_counter']}}</td>
-                                      <td><span style="font-size: smaller;">{{url['url']}}</span></td>
+                                      <td><span style="font-size: smaller;">{{url['url']['url']}}</span></td>
                                       <td style="text-align: center;"><span [ngClass]="url['status'] == 200? 'green-font' : 'green-red'"><b>{{url['status']}}</b></span></td>
                                       <td style="text-align: center;">{{url['total_seconds']}}s</td>
                                     </tr>
